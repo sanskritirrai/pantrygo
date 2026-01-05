@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PANTRYGO | Pantry</title>
+
+<style>
+:root{
+  --red:#b11212;
+  --bg:#f4f4f4;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
+body{background:var(--bg)}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 40px;
+  background:white;
+}
+
+.logo a{
+  text-decoration:none;
+  color:var(--text);
+  font-weight:700;
+}
+.logo span{color:var(--red)}
+
+.nav-links{
+  display:flex;
+  gap:20px;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:#333;
+}
+
+.container{padding:40px}
+
+.filters button{
+  margin-right:10px;
+  padding:8px 14px;
+  border-radius:20px;
+  border:1px solid #ddd;
+  background:white;
+  cursor:pointer;
+}
+
+.filters .active{
+  background:var(--red);
+  color:white;
+  border:none;
+}
+
+.grid{
+  margin-top:30px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 15px 35px rgba(0,0,0,.08);
+}
+
+.low{border-left:6px solid orange}
+.expiring{border-left:6px solid red}
+.instock{border-left:6px solid green}
+
+.tag{margin-top:10px;color:#666;font-size:14px}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo"><a href="index.html">PANTRY<span>GO</span></a></div>
+  <nav class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="pantry.html">Pantry</a>
+    <a href="shopping.html">Shopping</a>
+  </nav>
+</header>
+
+<div class="container">
+
+<div class="filters">
+  <button class="active" onclick="render('all')">All</button>
+  <button onclick="render('instock')">In Stock</button>
+  <button onclick="render('low')">Low</button>
+  <button onclick="render('expiring')">Expiring</button>
+</div>
+
+<div class="grid" id="pantryGrid"></div>
+
+</div>
+
+<script>
+const items=[
+ {name:"Milk",status:"low"},
+ {name:"Rice",status:"instock"},
+ {name:"Eggs",status:"expiring"},
+ {name:"Oil",status:"instock"},
+ {name:"Bread",status:"low"},
+]
+
+const grid=document.getElementById("pantryGrid")
+
+function render(filter){
+  grid.innerHTML=""
+  items
+   .filter(i=>filter==="all"||i.status===filter)
+   .forEach(i=>{
+     const div=document.createElement("div")
+     div.className=`card ${i.status}`
+     div.innerHTML=`
+       <h4>${i.name}</h4>
+       <div class="tag">Status: ${i.status}</div>
+     `
+     grid.appendChild(div)
+   })
+}
+
+render("all")
+</script>
+
+</body>
+</html>

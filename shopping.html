@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PANTRYGO | Shopping</title>
+
+<style>
+:root{
+  --red:#b11212;
+  --bg:#f4f4f4;
+  --dark:#111;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
+body{background:var(--bg);color:var(--dark)}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 40px;
+  background:white;
+}
+
+.logo a{
+  font-weight:800;
+  text-decoration:none;
+  color:black;
+}
+.logo span{color:var(--red)}
+
+.nav-links{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:#333;
+}
+
+.cart-btn{
+  background:var(--red);
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.container{padding:40px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 15px 35px rgba(0,0,0,.08);
+}
+
+.card h4{margin-bottom:6px}
+.price{color:#666;margin-bottom:10px}
+
+.card button{
+  background:var(--red);
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* CART */
+.cart{
+  position:fixed;
+  top:0;
+  right:-380px;
+  width:360px;
+  height:100%;
+  background:white;
+  box-shadow:-10px 0 30px rgba(0,0,0,.15);
+  padding:20px;
+  transition:.3s;
+}
+.cart.open{right:0}
+
+.cart-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.cart-header button{
+  background:none;
+  border:none;
+  font-size:20px;
+  cursor:pointer;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:12px;
+  font-size:14px;
+}
+
+.cart-item button{
+  background:none;
+  border:none;
+  color:red;
+  cursor:pointer;
+}
+
+.total{
+  margin-top:20px;
+  font-weight:700;
+}
+
+.checkout{
+  margin-top:16px;
+  width:100%;
+  background:var(--red);
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo"><a href="index.html">PANTRY<span>GO</span></a></div>
+  <nav class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="pantry.html">Pantry</a>
+    <a href="shopping.html">Shopping</a>
+    <button class="cart-btn" onclick="toggleCart()">🛒 Cart</button>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="grid" id="shopGrid"></div>
+</div>
+
+<div class="cart" id="cart">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button onclick="toggleCart()">✕</button>
+  </div>
+  <div id="cartItems"></div>
+  <div class="total">Total: ₹<span id="total">0</span></div>
+  <button class="checkout">Checkout</button>
+</div>
+
+<script>
+const products=[
+ {name:"Milk",price:60},
+ {name:"Eggs",price:70},
+ {name:"Rice",price:90},
+ {name:"Bread",price:40},
+ {name:"Apples",price:120},
+ {name:"Bananas",price:50},
+ {name:"Cheese",price:150},
+ {name:"Tomatoes",price:35},
+ {name:"Chicken",price:220},
+ {name:"Oil",price:180},
+]
+
+const grid=document.getElementById("shopGrid")
+const cart=document.getElementById("cart")
+const cartItems=document.getElementById("cartItems")
+const totalEl=document.getElementById("total")
+
+let cartData=[]
+
+function toggleCart(){
+  cart.classList.toggle("open")
+}
+
+function renderShop(){
+  products.forEach(p=>{
+    const div=document.createElement("div")
+    div.className="card"
+    div.innerHTML=`
+      <h4>${p.name}</h4>
+      <div class="price">₹${p.price}</div>
+      <button onclick='addToCart("${p.name}",${p.price})'>Add</button>
+    `
+    grid.appendChild(div)
+  })
+}
+
+function addToCart(name,price){
+  cartData.push({name,price})
+  renderCart()
+}
+
+function removeItem(index){
+  cartData.splice(index,1)
+  renderCart()
+}
+
+function renderCart(){
+  cartItems.innerHTML=""
+  let total=0
+  cartData.forEach((item,i)=>{
+    total+=item.price
+    cartItems.innerHTML+=`
+      <div class="cart-item">
+        <span>${item.name} - ₹${item.price}</span>
+        <button onclick="removeItem(${i})">✕</button>
+      </div>
+    `
+  })
+  totalEl.textContent=total
+}
+
+renderShop()
+</script>
+
+</body>
+</html>
